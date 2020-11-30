@@ -47,6 +47,43 @@ public class MDIPrincipal extends javax.swing.JFrame {
         }
     }
 
+    public void bitacora_inicio(){
+       //get_usuario();
+        String descrip="Ingresó a la plataforma ";
+       //Desciframos la fecha
+        java.util.Date fechaN = fecha.getDate();
+        long fecha = fechaN.getTime();
+        java.sql.Date dateN = new java.sql.Date(fecha);
+        
+        
+        //Obtenemos la hora
+                Calendar timec = Calendar.getInstance();
+                
+                int hora = timec.get(Calendar.HOUR_OF_DAY);
+                int minutos = timec.get(Calendar.MINUTE);
+                int segundos = timec.get(Calendar.SECOND);
+                
+                String time=hora+":"+minutos+":"+segundos;
+                
+        
+        try {
+            
+            Connection cn = DriverManager.getConnection(MDIPrincipal.BD, MDIPrincipal.Usuario, MDIPrincipal.Contraseña);
+            //localhost es 127.0.0.1
+            PreparedStatement pst = cn.prepareStatement("insert into bitacora values(?,?,?,?,?)");
+
+            pst.setString(1, "0");
+            pst.setString(2, labelusuario.getText().trim());
+            pst.setString(3, descrip);
+            pst.setString(4,dateN.toString().trim() );
+            pst.setString(5, time.trim());
+            
+            pst.executeUpdate();
+
+        } catch (SQLException e) {
+        }
+    }
+    
     public void bitacora_boton() {
         get_usuario();
         String boton = boton_press.getText();
@@ -63,7 +100,7 @@ public class MDIPrincipal extends javax.swing.JFrame {
         int minutos = timec.get(Calendar.MINUTE);
         int segundos = timec.get(Calendar.SECOND);
 
-        String datetime= dateN.toString()+ hora + ":" + minutos + ":" + segundos;
+        String time=hora + ":" + minutos + ":" + segundos;
 
         try {
 
@@ -71,10 +108,11 @@ public class MDIPrincipal extends javax.swing.JFrame {
             //localhost es 127.0.0.1
             PreparedStatement pst = cn.prepareStatement("insert into bitacora values(?,?,?,?,?)");
 
-            pst.setString(1, "0");
+             pst.setString(1, "0");
             pst.setString(2, lbusu.getText().trim());
             pst.setString(3, descrip);
-            pst.setString(4, dateN.toString().trim());
+            pst.setString(4,dateN.toString().trim() );
+            pst.setString(5, time);
 
             pst.executeUpdate();
 
@@ -106,6 +144,7 @@ public class MDIPrincipal extends javax.swing.JFrame {
         u = labelusuario.getText().trim();
         get_usuario();
         get_fecha();
+        bitacora_inicio();
     }
 
     /**
@@ -126,8 +165,8 @@ public class MDIPrincipal extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         menuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
-        MenuSucursal = new javax.swing.JMenuItem();
         MenuBodega = new javax.swing.JMenuItem();
+        MenuBitacora = new javax.swing.JMenuItem();
         helpMenu = new javax.swing.JMenu();
 
         labelc.setText("jLabel1");
@@ -148,23 +187,10 @@ public class MDIPrincipal extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
         jLabel1.setText("HEYDI QUEME        9959-18-5335");
         desktopPane.add(jLabel1);
-        jLabel1.setBounds(20, 400, 420, 50);
+        jLabel1.setBounds(620, 10, 420, 50);
 
         fileMenu.setMnemonic('f');
         fileMenu.setText("Mantenimientos");
-
-        MenuSucursal.setText("Mantenimiento Sucursal");
-        MenuSucursal.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                MenuSucursalMousePressed(evt);
-            }
-        });
-        MenuSucursal.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuSucursalActionPerformed(evt);
-            }
-        });
-        fileMenu.add(MenuSucursal);
 
         MenuBodega.setText("Mantenimiento Bodega");
         MenuBodega.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -178,6 +204,19 @@ public class MDIPrincipal extends javax.swing.JFrame {
             }
         });
         fileMenu.add(MenuBodega);
+
+        MenuBitacora.setText("Bitacora");
+        MenuBitacora.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                MenuBitacoraMousePressed(evt);
+            }
+        });
+        MenuBitacora.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MenuBitacoraActionPerformed(evt);
+            }
+        });
+        fileMenu.add(MenuBitacora);
 
         menuBar.add(fileMenu);
 
@@ -256,21 +295,21 @@ public class MDIPrincipal extends javax.swing.JFrame {
         boton_press.setText(nombre);
     }//GEN-LAST:event_MenuBodegaMousePressed
 
-    private void MenuSucursalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuSucursalActionPerformed
+    private void MenuBitacoraMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_MenuBitacoraMousePressed
         // TODO add your handling code here:
-        inf_Mantenimiento_Sucursal ventana1 = new inf_Mantenimiento_Sucursal();
+        String nombre = MenuBodega.getText();
+        boton_press.setText(nombre);
+    }//GEN-LAST:event_MenuBitacoraMousePressed
+
+    private void MenuBitacoraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuBitacoraActionPerformed
+        // TODO add your handling code here:
+        inf_Bitacora ventana1 = new inf_Bitacora();
         desktopPane.add(ventana1);
         Dimension desktopSize = desktopPane.getSize();
         Dimension FrameSize = ventana1.getSize();
         ventana1.setLocation((desktopSize.width - FrameSize.width) / 2, (desktopSize.height - FrameSize.height) / 2);
         bitacora_boton();
-    }//GEN-LAST:event_MenuSucursalActionPerformed
-
-    private void MenuSucursalMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_MenuSucursalMousePressed
-        // TODO add your handling code here:
-        String nombre = MenuSucursal.getText();
-        boton_press.setText(nombre);
-    }//GEN-LAST:event_MenuSucursalMousePressed
+    }//GEN-LAST:event_MenuBitacoraActionPerformed
 
     /**
      * @param args the command line arguments
@@ -311,8 +350,8 @@ public class MDIPrincipal extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenuItem MenuBitacora;
     private javax.swing.JMenuItem MenuBodega;
-    private javax.swing.JMenuItem MenuSucursal;
     private javax.swing.JLabel boton_press;
     private javax.swing.JDesktopPane desktopPane;
     private com.toedter.calendar.JDateChooser fecha;
