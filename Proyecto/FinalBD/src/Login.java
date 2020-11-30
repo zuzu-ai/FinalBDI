@@ -35,7 +35,7 @@ public class Login extends javax.swing.JFrame {
 
             if (rs.next()) {
 
-                lbusu.setText(rs.getString("id_usuario"));
+                lbusu.setText(rs.getString("nombre_usuario"));
                 
 
 
@@ -46,9 +46,10 @@ public class Login extends javax.swing.JFrame {
         }
     }
     
-    /*public void bitacora_inicio(){
-        get_usuario();
-        //Desciframos la fecha
+   public void bitacora_inicio(){
+       //get_usuario();
+        String descrip="Ingresó a la plataforma ";
+       //Desciframos la fecha
         java.util.Date fechaN = fecha.getDate();
         long fecha = fechaN.getTime();
         java.sql.Date dateN = new java.sql.Date(fecha);
@@ -71,17 +72,16 @@ public class Login extends javax.swing.JFrame {
             PreparedStatement pst = cn.prepareStatement("insert into bitacora values(?,?,?,?,?)");
 
             pst.setString(1, "0");
-            pst.setString(2, txtUsuario.getText());
-            pst.setString(3, "Ingresó a la plataforma");
-            pst.setString(4,dateN.toString() );
-            pst.setString(5, time);
-            
+            pst.setString(2, txtUsuario.getText().trim());
+            pst.setString(3, descrip);
+            pst.setString(4,dateN.toString().trim() );
+            pst.setString(5, time.trim());
             
             pst.executeUpdate();
 
         } catch (SQLException e) {
         }
-    }*/
+    }
     
     public Login() {
         initComponents();
@@ -188,13 +188,13 @@ public class Login extends javax.swing.JFrame {
         } else {
             try {
                 Connection cn = DriverManager.getConnection(MDIPrincipal.BD, MDIPrincipal.Usuario, MDIPrincipal.Contraseña);
-                PreparedStatement pst = cn.prepareStatement("select * from usuario where id_usuario = ?");
+                PreparedStatement pst = cn.prepareStatement("select * from usuario_hoteleria where nombre_usuario = ?");
                 pst.setString(1, txtUsuario.getText().trim());
 
                 ResultSet rs = pst.executeQuery();
 
                 if (rs.next()) {
-                    nombre = rs.getString("id_usuario");
+                    nombre = rs.getString("nombre_usuario");
                     contra = rs.getString("password_usuario");
                     co = txtContraseña.getText();
 
@@ -202,9 +202,9 @@ public class Login extends javax.swing.JFrame {
                     JOptionPane.showMessageDialog(null, "Usuario no registrado.");
                 }
                 if (txtUsuario.getText().equals(nombre) && co.equals(contra)) {
-
-                    JOptionPane.showMessageDialog(null, "Bienvenido\n", "Mensaje de bienvenida", JOptionPane.INFORMATION_MESSAGE);
                     //bitacora_inicio();
+                    JOptionPane.showMessageDialog(null, "Bienvenido\n", "Mensaje de bienvenida", JOptionPane.INFORMATION_MESSAGE);
+                    
 
                     MDIPrincipal principal = new MDIPrincipal();
                     MDIPrincipal.labelusuario.setText(nombre);
